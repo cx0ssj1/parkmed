@@ -1,0 +1,87 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}ParkMed &mdash; Inicio{% endblock %}
+
+{% block content %}
+
+<div class="bg-white rounded shadow-sm p-4 p-md-5 mb-4 border">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h1 class="fw-bold mb-3">ParkMed</h1>
+            <p class="lead text-muted mb-3">
+                Sistema de protección de estacionamiento para pacientes del
+                Hospital Regional de Concepción.
+            </p>
+            <p class="mb-4">
+                Si tienes una hora médica, registra tu vehículo y evita ser multado
+                o llevado por la grúa mientras te atiendes.
+            </p>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="#" class="btn btn-primary">
+                    <i class="bi bi-person-plus"></i> Registrarse
+                </a>
+                <a href="#" class="btn btn-outline-primary">
+                    <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
+                </a>
+                <a href="{% url 'core:about' %}" class="btn btn-outline-secondary">
+                    ¿Cómo funciona?
+                </a>
+            </div>
+        </div>
+        <div class="col-md-4 text-center d-none d-md-block">
+            <i class="bi bi-shield-check display-1 text-primary opacity-75"></i>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3 mt-5">
+    <h2 class="h4 mb-0">Vehículos actualmente protegidos</h2>
+    <span class="badge bg-primary fs-6">{{ total }} {% if total == 1 %}vehículo{% else %}vehículos{% endif %}</span>
+</div>
+
+<p class="text-muted small mb-4">
+    <i class="bi bi-info-circle"></i>
+    Por privacidad, solo se muestra información mínima del vehículo.
+    Los datos del paciente solo son accesibles por personal autorizado.
+</p>
+
+{% if estacionamientos %}
+    <div class="row g-3">
+        {% for est in estacionamientos %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge {% if est.estado == 'EN_URGENCIA' %}bg-danger{% else %}bg-success{% endif %}">
+                                {% if est.estado == 'EN_URGENCIA' %}
+                                    <i class="bi bi-exclamation-triangle-fill"></i> En urgencia
+                                {% else %}
+                                    <i class="bi bi-check-circle-fill"></i> En proceso
+                                {% endif %}
+                            </span>
+                            {% if est.tipo == 'Movilidad reducida' %}
+                                <span class="badge bg-info">
+                                    <i class="bi bi-universal-access"></i> Movilidad reducida
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <h3 class="h5 fw-bold font-monospace mb-2">{{ est.patente }}</h3>
+
+                        <div class="text-muted small">
+                            <i class="bi bi-clock"></i>
+                            Sale aprox. a las <strong>{{ est.hora_salida|time:"H:i" }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-light border text-center">
+        <i class="bi bi-inbox"></i>
+        No hay vehículos registrados en este momento.
+    </div>
+{% endif %}
+
+{% endblock %}

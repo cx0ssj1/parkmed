@@ -1,0 +1,35 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Acerca de &mdash; ParkMed{% endblock %}
+
+{% block content %}
+
+<div class="bg-white rounded shadow-sm p-4 p-md-5 border">
+    <h1 class="fw-bold mb-4">¿Cómo funciona ParkMed?</h1>
+
+    <h2 class="h4 mt-4">El problema</h2>
+    <p>
+        En la calle San Martín, junto al Hospital Regional de Concepción, está
+        prohibido estacionar al costado derecho. Sin embargo, el 83% de las
+        personas que estacionan ahí lo hacen porque tienen una hora médica y no
+        encuentran otro lugar. Carabineros y la policía municipal multan
+        regularmente, e incluso retiran los vehículos con grúa.
+    </p>
+
+    <h2 class="h4 mt-4">La solución</h2>
+    <p>
+        ParkMed permite a los pacientes registrar su vehículo asociándolo a una
+        hora médica o a una atención de urgencia. Carabineros y la policía
+        municipal pueden consultar la patente del vehículo antes de multar,
+        verificando si está protegido.
+    </p>
+
+    <h2 class="h4 mt-4">Tiempos de protección</h2>
+    <ul>
+        <li><strong>Pacientes estándar:</strong> 3 horas desde la hora médica, con 30 minutos de margen antes y después.</li>
+        <li><strong>Movilidad reducida o adultos mayores:</strong> 5 horas, con 1 hora de margen antes y después.</li>
+        <li><strong>Atención de urgencia:</strong> el cronómetro arranca al momento del registro.</li>
+    </ul>
+</div>
+
+{% endblock %}
