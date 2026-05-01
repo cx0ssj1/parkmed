@@ -21,19 +21,24 @@
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'usuarios:dashboard' %}">
+                            <i class="bi bi-grid"></i> Mi panel
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <span class="nav-link">
                             <i class="bi bi-person-circle"></i> {{ user.first_name|default:user.username }}
                         </span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Cerrar sesión</a>
+                        <a class="nav-link" href="{% url 'usuarios:logout' %}">Cerrar sesión</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Iniciar sesión</a>
+                        <a class="nav-link" href="{% url 'usuarios:login' %}">Iniciar sesión</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-light btn-sm ms-2 mt-1" href="#">Registrarse</a>
+                        <a class="btn btn-light btn-sm ms-2 mt-1" href="{% url 'usuarios:registro' %}">Registrarse</a>
                     </li>
                     <li class="nav-item ms-3">
                         <a class="nav-link small text-warning" href="#">

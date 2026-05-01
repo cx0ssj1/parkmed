@@ -1,0 +1,32 @@
+{% extends "layouts/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Iniciar sesión &mdash; ParkMed{% endblock %}
+
+{% block content %}
+
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="bg-white rounded shadow-sm p-4 border">
+            <h1 class="h3 fw-bold mb-4">Iniciar sesión</h1>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-primary w-100 mt-2">
+                    Entrar
+                </button>
+            </form>
+
+            <hr class="my-4">
+
+            <p class="text-center small text-muted mb-0">
+                ¿No tienes cuenta?
+                <a href="{% url 'usuarios:registro' %}">Regístrate</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

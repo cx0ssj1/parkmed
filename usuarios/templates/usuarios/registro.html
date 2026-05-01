@@ -1,0 +1,33 @@
+{% extends "layouts/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %} Registro &mdash; ParkMed {% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="bg-white rounded shadow-sm p-4 border">
+            <h1 class="h3 fw-bold mb-1">Crear cuenta</h1>
+            <p class="text-muted small mb-4">
+                Regístrate como paciente para proteger tus estacionamientos.
+            </p>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-primary w-100 mt-2">
+                    Registrarme
+                </button>
+            </form>
+
+            <hr class="my-4">
+
+            <p class="text-center small text-muted mb-0">
+                ¿Ya tienes cuenta?
+                <a href="{% url 'usuarios:login' %}">Inicia sesión</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
