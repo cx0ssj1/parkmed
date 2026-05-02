@@ -1,0 +1,41 @@
+{% extends "layouts/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Registrar estacionamiento &mdash; ParkMed{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="bg-white rounded shadow-sm p-4 border">
+            <h1 class="h3 fw-bold mb-1">Registrar estacionamiento</h1>
+            <p class="text-muted small mb-4">
+                Completa los datos para proteger tu vehículo durante la atención médica.
+            </p>
+
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i> Registrar
+                    </button>
+                    <a href="{% url 'usuarios:dashboard' %}" class="btn btn-outline-secondary">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="alert alert-info small mt-3">
+            <i class="bi bi-info-circle-fill"></i>
+            <strong>Recuerda:</strong>
+            la protección dura 3 horas (5h si hay movilidad reducida),
+            con un margen de 30 minutos antes y después de tu atención
+            (1 hora si tiene movilidad reducida).
+        </div>
+    </div>
+</div>
+
+{% endblock %}
