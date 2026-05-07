@@ -1,5 +1,6 @@
 from django import forms
 from .models import RegistroEstacionamiento
+from django.utils.timezone import make_aware, is_naive
 
 class RegistroEstacionamientoForm(forms.ModelForm):
     class Meta:
@@ -39,4 +40,6 @@ class RegistroEstacionamientoForm(forms.ModelForm):
                 "Debes indicar la fecha y hora de la atención médica, "
                 "o marcar que es una atención de urgencia."
             )
+        if fecha and is_naive(fecha):
+            cleaned["fecha_hora_medica"] = make_aware(fecha)
         return cleaned

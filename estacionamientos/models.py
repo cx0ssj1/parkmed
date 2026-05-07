@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import timedelta
+from django.utils.timezone import now
 
 class RegistroEstacionamiento(models.Model):
     ESTADO_PROGRAMADO = "PROGRAMADO"
@@ -62,3 +63,20 @@ class RegistroEstacionamiento(models.Model):
             hours=self.duracion_horas,
             minutes=self.margen_minutos
         )
+        
+    def estado_actual(self):
+        if self.es_urgencia:
+            if now() <= self.hora_fin_proteccion:
+                return self.ESTADO_EN_URGENCIA
+            return self.ESTADO_FINALIZADO
+
+        if not self.fecha_hora_medica:
+            return self.ESTADO_FINALIZADO
+
+        ahora = now()
+        if ahora < self.hora_inicio_proteccion:
+            return self.ESTADO_PROGRAMADO
+        elif ahora <= self.hora_fin_proteccion:
+            return self.ESTADO_EN_PROCESO
+        else:
+            return self.ESTADO_FINALIZADO

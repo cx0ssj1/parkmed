@@ -55,7 +55,17 @@ def logout_paciente(request):
 
 @login_required
 def dashboard(request):
-    estacionamientos = []
-    return render(request, 'usuarios/dashboard.html', {
-        'estacionamientos': estacionamientos,
+    registros = request.user.estacionamientos.all()
+    activos_o_proximos = [
+        r for r in registros
+        if r.estado_actual() != r.ESTADO_FINALIZADO
+    ]
+    historial = [
+        r for r in registros
+        if r.estado_actual() == r.ESTADO_FINALIZADO
+    ]
+
+    return render(request, "usuarios/dashboard.html", {
+        "activos": activos_o_proximos,
+        "historial": historial,
     })

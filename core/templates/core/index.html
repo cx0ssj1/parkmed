@@ -47,34 +47,36 @@
 
 {% if estacionamientos %}
     <div class="row g-3">
-        {% for est in estacionamientos %}
+        {% for r in estacionamientos %}
+            {% with estado=r.estado_actual %}
             <div class="col-md-6 col-lg-4">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start mb-3">
-                            <span class="badge {% if est.estado == 'EN_URGENCIA' %}bg-danger{% else %}bg-success{% endif %}">
-                                {% if est.estado == 'EN_URGENCIA' %}
+                            <span class="badge {% if estado == 'EN_URGENCIA' %}bg-danger{% else %}bg-success{% endif %}">
+                                {% if estado == 'EN_URGENCIA' %}
                                     <i class="bi bi-exclamation-triangle-fill"></i> En urgencia
                                 {% else %}
                                     <i class="bi bi-check-circle-fill"></i> En proceso
                                 {% endif %}
                             </span>
-                            {% if est.tipo == 'Movilidad reducida' %}
+                            {% if r.movilidad_reducida == 'Movilidad reducida' %}
                                 <span class="badge bg-info">
                                     <i class="bi bi-universal-access"></i> Movilidad reducida
                                 </span>
                             {% endif %}
                         </div>
 
-                        <h3 class="h5 fw-bold font-monospace mb-2">{{ est.patente }}</h3>
+                        <h3 class="h5 fw-bold font-monospace mb-2">{{ r.patente }}</h3>
 
                         <div class="text-muted small">
                             <i class="bi bi-clock"></i>
-                            Sale aprox. a las <strong>{{ est.hora_salida|time:"H:i" }}</strong>
+                            Sale aprox. a las <strong>{{ r.hora_fin_proteccion|time:"H:i" }}</strong>
                         </div>
                     </div>
                 </div>
             </div>
+            {% endwith %}
         {% endfor %}
     </div>
 {% else %}
