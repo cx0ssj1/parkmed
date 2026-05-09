@@ -33,18 +33,30 @@ def registro(request):
 
 def login_paciente(request):
     if request.user.is_authenticated:
-        return redirect('usuarios:dashboard')
+        if hasattr(request.user, "paciente"):
+            return redirect("usuarios:dashboard")
+        if hasattr(request.user, "policia"):
+            return redirect("policias:dashboard")
+        return redirect("core:index")
+    
     if request.method == 'POST':
         form = LoginPacienteForm(request.POST)
         if form.is_valid():
             rut = form.cleaned_data['rut']
             password = form.cleaned_data['password']
             user = authenticate(request, username=rut, password=password)
-            if user is not None:
+            if user is None:
+                messages.error(request, "RUT o contraseña incorrectos.")
+            elif not hasattr(user, "paciente"):
+                messages.error(
+                    request,
+                    "Esta cuenta no corresponde a un paciente. "
+                    "Si eres policía, ingresa por el acceso correspondiente."
+                )
+            else:
                 login(request, user)
-                messages.success(request, f"Bienvenido, {user.first_name}!")
-                return redirect('usuarios:dashboard')
-            messages.error(request, "RUT o contraseña incorrectos.")
+                messages.success(request, f"Bienvenido, {user.first_name}.")
+                return redirect("usuarios:dashboard")
     else:
         form = LoginPacienteForm()
     return render(request, 'usuarios/login.html', {'form': form})

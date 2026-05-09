@@ -10,8 +10,12 @@ def es_policia(user):
     return user.is_authenticated and hasattr(user, "policia")
 
 def login_policia(request):
-    if request.user.is_authenticated and hasattr(request.user, "policia"):
-        return redirect("policias:dashboard")
+    if request.user.is_authenticated:
+        if hasattr(request.user, "policia"):
+            return redirect("policias:dashboard")
+        if hasattr(request.user, "paciente"):
+            return redirect("usuarios:dashboard")
+        return redirect("core:index")
 
     if request.method == "POST":
         form = LoginPoliciaForm(request.POST)
@@ -19,14 +23,21 @@ def login_policia(request):
             rut = form.cleaned_data["rut"]
             password = form.cleaned_data["password"]
             user = authenticate(request, username=rut, password=password)
-            if user is not None and hasattr(user, "policia"):
+            if user is None:
+                messages.error(request, "RUT o contraseña incorrectos.")
+            elif not hasattr(user, "policia"):
+                messages.error(
+                    request,
+                    "Esta cuenta no corresponde a un policía. "
+                    "Si eres paciente, ingresa por el acceso correspondiente."
+                )
+            else:
                 login(request, user)
                 messages.success(
                     request,
                     f"Bienvenido, {user.get_full_name() or user.username}."
                 )
                 return redirect("policias:dashboard")
-            messages.error(request, "Credenciales inválidas o sin permisos de policía.")
     else:
         form = LoginPoliciaForm()
 
