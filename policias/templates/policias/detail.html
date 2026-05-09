@@ -1,0 +1,84 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Detalle del registro &mdash; ParkMed{% endblock %}
+
+{% block content %}
+
+{% with estado=registro.estado_actual %}
+
+<a href="{% url 'policias:dashboard' %}" class="text-decoration-none mb-3 d-inline-block">
+    <i class="bi bi-arrow-left"></i> Volver al buscador
+</a>
+
+<div class="bg-white rounded shadow-sm p-4 border">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h1 class="h2 fw-bold font-monospace mb-2">{{ registro.patente }}</h1>
+            <span class="badge fs-6 {% if estado == 'EN_URGENCIA' %}bg-danger{% elif estado == 'EN_PROCESO' %}bg-success{% else %}bg-secondary{% endif %}">
+                {% if estado == 'EN_URGENCIA' %}
+                    <i class="bi bi-exclamation-triangle-fill"></i> En urgencia
+                {% elif estado == 'EN_PROCESO' %}
+                    <i class="bi bi-check-circle-fill"></i> En proceso
+                {% else %}
+                    <i class="bi bi-clock"></i> No activo
+                {% endif %}
+            </span>
+        </div>
+        {% if registro.movilidad_reducida %}
+            <span class="badge bg-info fs-6">
+                <i class="bi bi-universal-access"></i> Movilidad reducida
+            </span>
+        {% endif %}
+    </div>
+
+    <hr>
+
+    <h2 class="h5 mb-3">Datos del paciente</h2>
+    <dl class="row mb-4">
+        <dt class="col-sm-4">RUT</dt>
+        <dd class="col-sm-8">{{ registro.rut_paciente }}</dd>
+
+        <dt class="col-sm-4">Nombre</dt>
+        <dd class="col-sm-8">{{ registro.nombre_paciente }}</dd>
+    </dl>
+
+    <h2 class="h5 mb-3">Atención médica</h2>
+    {% if registro.es_urgencia %}
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle-fill fs-3"></i>
+            <strong class="fs-5">EN URGENCIA</strong>
+            <p class="mb-0 small">
+                Este paciente fue ingresado por urgencia, sin hora médica programada.
+            </p>
+        </div>
+    {% else %}
+        <dl class="row mb-4">
+            <dt class="col-sm-4">Fecha y hora</dt>
+            <dd class="col-sm-8">{{ registro.fecha_hora_medica|date:"d/m/Y H:i" }}</dd>
+
+            <dt class="col-sm-4">Foto del comprobante</dt>
+            <dd class="col-sm-8">
+                {% if registro.foto_hora_medica %}
+                    <a href="{{ registro.foto_hora_medica.url }}" target="_blank">
+                        <img src="{{ registro.foto_hora_medica.url }}" alt="Foto hora médica" class="img-thumbnail" style="max-width: 250px;">
+                    </a>
+                {% else %}
+                    <span class="text-muted">No adjunta</span>
+                {% endif %}
+            </dd>
+        </dl>
+    {% endif %}
+
+    <h2 class="h5 mb-3">Tiempos de protección</h2>
+    <dl class="row mb-0">
+        <dt class="col-sm-4">Inicio</dt>
+        <dd class="col-sm-8">{{ registro.hora_inicio_proteccion|date:"d/m/Y H:i" }}</dd>
+
+        <dt class="col-sm-4">Fin</dt>
+        <dd class="col-sm-8">{{ registro.hora_fin_proteccion|date:"d/m/Y H:i" }}</dd>
+    </dl>
+</div>
+
+{% endwith %}
+
+{% endblock %}

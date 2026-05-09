@@ -69,3 +69,8 @@ def dashboard(request):
         "activos": activos_o_proximos,
         "historial": historial,
     })
+
+def logout_paciente(request):
+    logout(request)
+    messages.info(request, "Has cerrado sesión.")
+    return redirect('core:index')

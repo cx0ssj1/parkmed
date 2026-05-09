@@ -23,8 +23,13 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('usuarios/', include('usuarios.urls')),
     path('estacionamientos/', include('estacionamientos.urls')),
+    path("policia/", include("policias.urls")),
     path('', include('core.urls')),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+admin.site.site_header = "Administración de ParkMed"
+admin.site.site_title = "ParkMed Admin"
+admin.site.index_title = "Panel de gestión"

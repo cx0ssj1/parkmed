@@ -1,0 +1,72 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Buscador &mdash; ParkMed{% endblock %}
+
+{% block content %}
+
+<div class="bg-white rounded shadow-sm p-4 border mb-4">
+    <h1 class="h3 fw-bold mb-1">
+        <i class="bi bi-shield-fill-check text-warning"></i>
+        Verificar patente
+    </h1>
+    <p class="text-muted small mb-4">
+        Ingresa la patente del vehículo para verificar si tiene una protección activa.
+    </p>
+
+    <form method="get" class="row g-2">
+        <div class="col-sm-9">
+            <input type="text" name="patente" class="form-control form-control-lg font-monospace text-uppercase" placeholder="Ej: ABCD12" value="{{ patente_buscada }}" autofocus>
+        </div>
+        <div class="col-sm-3">
+            <button type="submit" class="btn btn-primary btn-lg w-100">
+                <i class="bi bi-search"></i> Buscar
+            </button>
+        </div>
+    </form>
+</div>
+
+{% if patente_buscada %}
+    {% if resultados %}
+        <h2 class="h5 mb-3">
+            Resultados para <span class="font-monospace">{{ patente_buscada }}</span>
+        </h2>
+        <div class="row g-3">
+            {% for r in resultados %}
+                {% with estado=r.estado_actual %}
+                <div class="col-md-6 col-lg-4">
+                    <a href="{% url 'policias:detail' r.pk %}" class="text-decoration-none text-reset">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <span class="badge {% if estado == 'EN_URGENCIA' %}bg-danger{% else %}bg-success{% endif %} mb-3">
+                                    {% if estado == 'EN_URGENCIA' %}
+                                        <i class="bi bi-exclamation-triangle-fill"></i> En urgencia
+                                    {% else %}
+                                        <i class="bi bi-check-circle-fill"></i> En proceso
+                                    {% endif %}
+                                </span>
+
+                                <h3 class="h5 fw-bold font-monospace mb-2">{{ r.patente }}</h3>
+                                <p class="small text-muted mb-2">
+                                    Click para ver detalle del paciente
+                                </p>
+                                <p class="small mb-0">
+                                    <i class="bi bi-clock"></i>
+                                    Protegido hasta {{ r.hora_fin_proteccion|date:"H:i" }}
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <strong>{{ patente_buscada }}</strong> no tiene una protección activa en este momento.
+            Puede proceder con la fiscalización.
+        </div>
+    {% endif %}
+{% endif %}
+
+{% endblock %}
