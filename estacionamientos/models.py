@@ -80,3 +80,8 @@ class RegistroEstacionamiento(models.Model):
             return self.ESTADO_EN_PROCESO
         else:
             return self.ESTADO_FINALIZADO
+    def es_editable(self):
+        return self.estado_actual() in (
+            self.ESTADO_EN_PROCESO,
+            self.ESTADO_EN_URGENCIA,
+        )

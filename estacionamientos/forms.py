@@ -1,4 +1,6 @@
 from django import forms
+
+from core.validators import normalizar_rut, validar_rut
 from .models import RegistroEstacionamiento
 from django.utils.timezone import make_aware, is_naive
 
@@ -31,6 +33,10 @@ class RegistroEstacionamientoForm(forms.ModelForm):
             "movilidad_reducida": "Activa esto si vas a adjuntar carnet de discapacidad o adulto mayor.",
             "es_urgencia": "Si activas esto, la fecha y hora de la atención no es necesaria.",
         }
+    def clean_rut_paciente(self):
+        rut = self.cleaned_data["rut_paciente"]
+        validar_rut(rut)
+        return normalizar_rut(rut)
     def clean(self):
         cleaned = super().clean()
         es_urgencia = cleaned.get("es_urgencia")
@@ -42,4 +48,41 @@ class RegistroEstacionamientoForm(forms.ModelForm):
             )
         if fecha and is_naive(fecha):
             cleaned["fecha_hora_medica"] = make_aware(fecha)
+        return cleaned
+class EditarRegistroForm(forms.ModelForm):
+    class Meta:
+        model = RegistroEstacionamiento
+        fields = [
+            "fecha_hora_medica",
+            "foto_hora_medica",
+            "movilidad_reducida",
+        ]
+        widgets = {
+            "fecha_hora_medica": forms.DateTimeInput(
+                attrs={"type": "datetime-local"},
+                format="%Y-%m-%dT%H:%M",
+            ),
+        }
+        labels = {
+            "fecha_hora_medica": "Fecha y hora de la atención médica",
+            "foto_hora_medica": "Foto de la hora médica",
+            "movilidad_reducida": "El paciente tiene movilidad reducida o es adulto mayor",
+        }
+        help_texts = {
+            "foto_hora_medica": "Puedes subir o reemplazar el comprobante de tu atención.",
+        }
+
+    def clean(self):
+        cleaned = super().clean()
+        es_urgencia = self.instance.es_urgencia
+        fecha = cleaned.get("fecha_hora_medica")
+
+        if not es_urgencia and not fecha:
+            raise forms.ValidationError(
+                "Debes indicar la fecha y hora de la atención médica."
+            )
+
+        if fecha and is_naive(fecha):
+            cleaned["fecha_hora_medica"] = make_aware(fecha)
+
         return cleaned

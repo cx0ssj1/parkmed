@@ -64,6 +64,10 @@
                             <i class="bi bi-shield-check"></i>
                             Protegido hasta {{ r.hora_fin_proteccion|date:"d/m/Y H:i" }}
                         </p>
+                        
+                        <a href="{% url 'estacionamientos:editar' r.pk %}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i> Editar / Completar documentación
+                        </a>
 
                         <form method="post" action="{% url 'estacionamientos:eliminar' r.pk %}" onsubmit="return confirm('¿Eliminar este registro?');">
                             {% csrf_token %}

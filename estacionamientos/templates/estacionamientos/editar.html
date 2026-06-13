@@ -1,0 +1,50 @@
+{% extends "layouts/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Editar registro &mdash; ParkMed{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="bg-white rounded shadow-sm p-4 border">
+            <h1 class="h3 fw-bold mb-1">Completar documentación</h1>
+            <p class="text-muted small mb-4">
+                Actualiza los datos de tu atención o adjunta el comprobante.
+            </p>
+
+            <div class="bg-light rounded p-3 mb-4">
+                <div class="row small">
+                    <div class="col-6">
+                        <span class="text-muted">Patente:</span>
+                        <strong class="font-monospace d-block">{{ registro.patente }}</strong>
+                    </div>
+                    <div class="col-6">
+                        <span class="text-muted">Paciente:</span>
+                        <strong class="d-block">{{ registro.nombre_paciente }}</strong>
+                    </div>
+                </div>
+                <p class="text-muted small mb-0 mt-2">
+                    <i class="bi bi-lock-fill"></i>
+                    La patente y los datos del paciente no se pueden modificar.
+                </p>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i> Guardar cambios
+                    </button>
+                    <a href="{% url 'usuarios:dashboard' %}" class="btn btn-outline-secondary">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

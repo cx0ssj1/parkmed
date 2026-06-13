@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
+
+from core.validators import normalizar_rut, validar_rut
 from .models import Paciente
 
 class RegistroPacienteForm(forms.Form):
@@ -30,6 +32,8 @@ class RegistroPacienteForm(forms.Form):
 
     def clean_rut(self):
         rut = self.cleaned_data["rut"]
+        validar_rut(rut)
+        rut = normalizar_rut(rut)  # normaliza al formato único
         if Paciente.objects.filter(rut=rut).exists():
             raise forms.ValidationError("Ya existe un usuario con este RUT.")
         return rut
