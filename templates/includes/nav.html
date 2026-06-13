@@ -29,30 +29,50 @@
 
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}
-                    
                     {% if user.policia %}
-                        
-                    {% else %}                        
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'usuarios:dashboard' %}">
-                            <i class="bi bi-grid"></i> Mi panel
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'policias:dashboard' %}">
+                                <i class="bi bi-search"></i> Buscar patente
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link">
+                                <i class="bi bi-shield-fill-check text-warning"></i>
+                                {{ user.first_name|default:user.username }}
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'policias:logout' %}">Cerrar sesión</a>
+                        </li>
+                    {% elif user.paciente %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'usuarios:dashboard' %}">
+                                <i class="bi bi-grid"></i> Mi panel
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link">
+                                <i class="bi bi-person-circle"></i> {{ user.first_name|default:user.username }}
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'usuarios:logout' %}">Cerrar sesión</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'administracion:lista_usuarios' %}">
+                                <i class="bi bi-people-fill"></i> Gestión de usuarios
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link">
+                                <i class="bi bi-gear-fill"></i> {{ user.first_name|default:user.username }}
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'administracion:logout' %}">Cerrar sesión</a>
+                        </li>
                     {% endif %}
-                    <li class="nav-item">
-                        <span class="nav-link">
-                            
-                            {% if user.policia %}
-                                <i class="bi bi-shield-fill"></i> {{ user.username }}
-                            {% elif user.paciente %}
-                                <i class="bi bi-person-circle"></i> {{ user.first_name }}
-                            {% endif %}
-                                
-                        </span>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'usuarios:logout' %}">Cerrar sesión</a>
-                    </li>
                 {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'usuarios:login' %}">Iniciar sesión</a>
@@ -63,6 +83,11 @@
                     <li class="nav-item ms-3">
                         <a class="nav-link small text-warning" href="{% url 'policias:login' %}">
                             <i class="bi bi-shield-fill"></i> Acceso policía
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link small text-secondary" href="{% url 'administracion:login' %}">
+                            <i class="bi bi-gear-fill"></i> Admin
                         </a>
                     </li>
                 {% endif %}

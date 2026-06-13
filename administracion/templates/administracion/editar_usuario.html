@@ -1,0 +1,55 @@
+{% extends "layouts/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Editar usuario &mdash; ParkMed{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <a href="{% url 'administracion:lista_usuarios' %}" class="text-decoration-none mb-3 d-inline-block">
+            <i class="bi bi-arrow-left"></i> Volver al listado
+        </a>
+
+        <div class="bg-white rounded shadow-sm p-4 border">
+            <h1 class="h3 fw-bold mb-1">Editar usuario</h1>
+            <p class="text-muted small mb-4">
+                <span class="font-monospace">{{ usuario.username }}</span>
+                &middot; el RUT no se puede modificar.
+            </p>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i> Guardar cambios
+                    </button>
+                    <a href="{% url 'administracion:lista_usuarios' %}" class="btn btn-outline-secondary">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const esPaciente = {% if usuario.paciente %}true{% else %}false{% endif %};
+        const esPolicia = {% if usuario.policia %}true{% else %}false{% endif %};
+
+        const campoCelular = document.querySelector("#id_celular");
+        const campoInstitucion = document.querySelector("#id_institucion");
+        const campoPlaca = document.querySelector("#id_numero_placa");
+
+        function contenedor(campo) {
+            return campo.closest(".mb-3") || campo.parentElement;
+        }
+        contenedor(campoCelular).style.display = esPaciente ? "" : "none";
+        contenedor(campoInstitucion).style.display = esPolicia ? "" : "none";
+        contenedor(campoPlaca).style.display = esPolicia ? "" : "none";
+    });
+</script>
+{% endblock %}
+{% endblock %}

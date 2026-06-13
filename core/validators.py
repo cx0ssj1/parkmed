@@ -32,6 +32,12 @@ def validar_rut(rut):
 
     if not cuerpo.isdigit():
         raise ValidationError("El cuerpo del RUT debe contener solo números.")
+    
+    largo_normalizado = len(cuerpo) + 2  
+    if largo_normalizado < 9 or largo_normalizado > 11:
+        raise ValidationError(
+            "El RUT debe tener entre 9 y 11 caracteres en formato 12345678-9."
+        )
 
     if calcular_dv(cuerpo) != dv:
         raise ValidationError("El dígito verificador del RUT no es correcto.")

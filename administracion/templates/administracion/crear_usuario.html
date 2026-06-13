@@ -1,0 +1,68 @@
+{% extends "layouts/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Nuevo usuario &mdash; ParkMed{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <a href="{% url 'administracion:lista_usuarios' %}" class="text-decoration-none mb-3 d-inline-block">
+            <i class="bi bi-arrow-left"></i> Volver al listado
+        </a>
+
+        <div class="bg-white rounded shadow-sm p-4 border">
+            <h1 class="h3 fw-bold mb-1">Nuevo usuario</h1>
+            <p class="text-muted small mb-4">
+                Crea una cuenta de paciente o policía.
+            </p>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i> Crear usuario
+                    </button>
+                    <a href="{% url 'administracion:lista_usuarios' %}" class="btn btn-outline-secondary">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <p class="text-muted small mt-3">
+            <i class="bi bi-info-circle"></i>
+            Los campos de celular, institución y placa se usan según el tipo de usuario.
+        </p>
+    </div>
+</div>
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectRol = document.querySelector("#id_rol");
+        const campoCelular = document.querySelector("#id_celular");
+        const campoInstitucion = document.querySelector("#id_institucion");
+        const campoPlaca = document.querySelector("#id_numero_placa");
+
+        function contenedor(campo) {
+            return campo.closest(".mb-3") || campo.parentElement;
+        }
+
+        function actualizarCampos() {
+            const rol = selectRol.value;
+            const esPaciente = rol === "PACIENTE";
+            const esPolicia = rol === "POLICIA";
+
+            contenedor(campoCelular).style.display = esPaciente ? "" : "none";
+            contenedor(campoInstitucion).style.display = esPolicia ? "" : "none";
+            contenedor(campoPlaca).style.display = esPolicia ? "" : "none";
+        }
+
+        actualizarCampos();
+        selectRol.addEventListener("change", actualizarCampos);  
+    });
+</script>
+{% endblock %}
+{% endblock %}
+
