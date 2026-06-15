@@ -45,7 +45,13 @@ class CrearUsuarioForm(forms.Form):
         widget=forms.PasswordInput,
         min_length=6
     )
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["rut"].widget.attrs.update({
+            "pattern": r"[0-9\.]+-?[0-9kK]",
+            "title": "Ingresa un RUT válido, ej: 12345678-9",
+            "placeholder": "12345678-9",
+        })
     def clean_rut(self):
         rut = self.cleaned_data["rut"]
         validar_rut(rut)

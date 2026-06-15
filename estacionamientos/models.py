@@ -16,7 +16,11 @@ class RegistroEstacionamiento(models.Model):
         (ESTADO_FINALIZADO, "Finalizado"),
     ]
     
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name="estacionamientos")
+    paciente = models.ForeignKey(
+        "usuarios.Paciente",
+        on_delete=models.CASCADE,
+        related_name="estacionamientos"
+    )
     rut_paciente = models.CharField(max_length=10)
     nombre_paciente = models.CharField(max_length=150)
     patente = models.CharField(max_length=6)
@@ -81,7 +85,4 @@ class RegistroEstacionamiento(models.Model):
         else:
             return self.ESTADO_FINALIZADO
     def es_editable(self):
-        return self.estado_actual() in (
-            self.ESTADO_EN_PROCESO,
-            self.ESTADO_EN_URGENCIA,
-        )
+        return self.estado_actual() != self.ESTADO_FINALIZADO

@@ -67,7 +67,7 @@ def logout_paciente(request):
 
 @login_required
 def dashboard(request):
-    registros = request.user.estacionamientos.all()
+    registros = request.user.paciente.estacionamientos.all()
     activos_o_proximos = [
         r for r in registros
         if r.estado_actual() != r.ESTADO_FINALIZADO

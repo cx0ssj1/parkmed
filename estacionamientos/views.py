@@ -1,6 +1,10 @@
+from urllib import request
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+
+from usuarios.views import registro
 from .models import RegistroEstacionamiento
 from .forms import RegistroEstacionamientoForm, EditarRegistroForm
 
@@ -11,7 +15,7 @@ def create(request):
         form = RegistroEstacionamientoForm(request.POST, request.FILES)
         if form.is_valid():
             registro = form.save(commit=False)
-            registro.usuario = request.user
+            registro.paciente = request.user.paciente
             registro.save()
             messages.success(request, "Estacionamiento registrado. ¡Ya estás protegido!")
             return redirect("usuarios:dashboard")
@@ -21,7 +25,11 @@ def create(request):
 
 @login_required
 def eliminar(request, pk):
-    registro = get_object_or_404(RegistroEstacionamiento, pk=pk, usuario=request.user)
+    registro = get_object_or_404(
+        RegistroEstacionamiento,
+        pk=pk,
+        paciente=request.user.paciente  
+    )
     if request.method == "POST":
         registro.delete()
         messages.info(request, "Registro eliminado.")
@@ -34,7 +42,7 @@ def editar(request, pk):
     registro = get_object_or_404(
         RegistroEstacionamiento,
         pk=pk,
-        usuario=request.user  
+        paciente=request.user.paciente  
     )
 
     if not registro.es_editable():
@@ -43,7 +51,7 @@ def editar(request, pk):
             "Este registro ya finalizó y no se puede editar."
         )
         return redirect("usuarios:dashboard")
-
+    
     if request.method == "POST":
         form = EditarRegistroForm(request.POST, request.FILES, instance=registro)
         if form.is_valid():

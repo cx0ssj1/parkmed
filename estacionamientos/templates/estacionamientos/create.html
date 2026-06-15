@@ -13,7 +13,7 @@
                 Completa los datos para proteger tu vehículo durante la atención médica.
             </p>
 
-            <form method="post" enctype="multipart/form-data" novalidate>
+            <form method="post" enctype="multipart/form-data" >
                 {% csrf_token %}
                 {{ form|crispy }}
 

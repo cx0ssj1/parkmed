@@ -33,6 +33,13 @@ class RegistroEstacionamientoForm(forms.ModelForm):
             "movilidad_reducida": "Activa esto si vas a adjuntar carnet de discapacidad o adulto mayor.",
             "es_urgencia": "Si activas esto, la fecha y hora de la atención no es necesaria.",
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["rut_paciente"].widget.attrs.update({
+            "pattern": r"[0-9\.]+-?[0-9kK]",
+            "title": "Ingresa un RUT válido, ej: 12345678-9",
+            "placeholder": "12345678-9",
+        })
     def clean_rut_paciente(self):
         rut = self.cleaned_data["rut_paciente"]
         validar_rut(rut)

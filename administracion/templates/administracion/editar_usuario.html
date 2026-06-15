@@ -18,7 +18,7 @@
                 &middot; el RUT no se puede modificar.
             </p>
 
-            <form method="post" novalidate>
+            <form method="post" >
                 {% csrf_token %}
                 {{ form|crispy }}
                 <div class="d-flex gap-2 mt-3">

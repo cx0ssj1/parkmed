@@ -17,7 +17,7 @@
                 Crea una cuenta de paciente o policía.
             </p>
 
-            <form method="post" novalidate>
+            <form method="post" >
                 {% csrf_token %}
                 {{ form|crispy }}
                 <div class="d-flex gap-2 mt-3">

@@ -12,7 +12,7 @@
                 Regístrate como paciente para proteger tus estacionamientos.
             </p>
 
-            <form method="post" novalidate>
+            <form method="post" >
                 {% csrf_token %}
                 {{ form|crispy }}
                 <button type="submit" class="btn btn-primary w-100 mt-2">

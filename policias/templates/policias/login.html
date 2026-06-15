@@ -16,7 +16,7 @@
                 Solo Carabineros y Policía Municipal autorizados.
             </p>
 
-            <form method="post" novalidate>
+            <form method="post" >
                 {% csrf_token %}
                 {{ form|crispy }}
                 <button type="submit" class="btn btn-warning w-100 mt-2">
